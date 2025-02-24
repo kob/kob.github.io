@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <h1>Convert Text to Custom Named TXT File and Save on Server</h1>
+    <h1>Convert Text to Custom Named TXT File and Download</h1>
     <textarea id="textInput" placeholder="Enter your text here..."></textarea>
     <br>
     <input type="text" id="fileName" placeholder="Enter file name (without extension)">
@@ -47,15 +47,20 @@
                 return;
             }
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'save_text.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    document.getElementById('message').innerText = xhr.responseText;
-                }
-            };
-            xhr.send('text=' + encodeURIComponent(textInput) + '&filename=' + encodeURIComponent(fileName));
+            // 创建Blob对象
+            const blob = new Blob([textInput], { type: 'text/plain' });
+
+            // 创建下载链接
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            document.getElementById('message').innerText = "File has been downloaded as " + fileName + ".txt";
         }
     </script>
 </body>
