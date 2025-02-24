@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to TXT File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #message {
+            margin-top: 20px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Convert Text to TXT File and Save on Server</h1>
+    <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+    <br>
+    <button onclick="saveTextToFile()">Save as TXT</button>
+    <div id="message"></div>
+
+    <script>
+        function saveTextToFile() {
+            const textInput = document.getElementById('textInput').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'save_text.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById('message').innerText = xhr.responseText;
+                }
+            };
+            xhr.send('text=' + encodeURIComponent(textInput));
+        }
+    </script>
+</body>
+</html>
